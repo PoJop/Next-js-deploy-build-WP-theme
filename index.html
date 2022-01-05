@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="reset.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <link rel="icon" type="icon" href="/nextjs_icon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,900&display=swap" rel="stylesheet">
+    <title>Подключение Duild Next js для WordPress темы</title>
+  </head>
+  <body>
+    <div class="root">
+      <section class="utils">
+           <form class="nextConeForm">
+          <label>
+            BUILD_ID
+            <input
+              type="text"
+              class="nextCone"
+              placeholder=""
+            />
+          </label>
+          <button type="submit" class="nextConeSubmit">Добавить</button>
+        </form>
+        <form class="buildManifestForm">
+          <textarea
+            type="text"
+            class="buildManifest"
+            placeholder="BuildManifest"
+          ></textarea>
+          <button type="submit" class="buildManifestSubmit">Добавить</button>
+        </form>
+        <div>
+          <div class="code_wrapper">
+            <code class="css"></code>
+            <code class="js"></code>
+          </div>
+          <div class="copy-button_wrapper">
+            <button type="button" class="copy_all">Скопировать все</button>
+            <button type="button" class="copy_js">Скопировать JS</button>
+            <button type="button" class="copy_css">Скопировать CSS</button>
+          </div>
+        </div>
+      </section>
+      <section class="docs">
+        <div class="">
+          <h1>Подключение Duild Next js для WordPress темы</h1>
+        </div>
+        <div class="step step1">
+          <h2>1. Сборка проекта</h2>
+          <p>
+            Перед тем как запустить сборку проекта перейдите в
+            <code>package.json</code> и в
+            <code>scripts => build</code> пропишите
+            <code onclick="navigator.clipboard.writeText(`next build && next export`)">"next build && next export"</code>. <br />
+
+            <img src="/img/01.png" /><br />
+            После этого можете смело запускать скрипт сборки этой командой
+            <code onclick="navigator.clipboard.writeText(`npm run build`)"></code>.
+          </p>
+        </div>
+        <div class="step step2">
+          <h2>
+            2. Дальше подготовим тему WP, на которую и будим садить наш билд
+          </h2>
+          <p>
+            Любым удобным способом клонируем этот шаблон пустой темы
+            <span onclick="navigator.clipboard.writeText(`https://github.com/Automattic/_s.git`)">https://github.com/Automattic/_s.git</span> в файл
+            <span>themes</span> по этому пути
+            <span>"Название-проекта/wp-content/themes"</span>
+          </p>
+          <p>
+            Потом открываем проект в любом редакторе и переходим к теме которую
+            загрузили. В файле header.php удаляем все что идет после
+            <code onclick="navigator.clipboard.writeText(`<?php wp_body_open(); ?>`)">&#60;?php wp_body_open(); ?&#62;</code>.
+
+            С <span>footer.php</span> проделываем тоже самое, удаляя все <span>html</span> теги оставляя
+            <code onclick="navigator.clipboard.writeText(`<?php wp_footer(); ?>`)">&#60;?php wp_footer(); ?&#62;</code> и два закрывающих тега <code>&#60;/body&#62;</code> и <code>&#60;/html&#62;</code>
+          </p>
+        </div>
+        <div class="step step3">
+          <h2>3. Посадка билда</h2>
+          <p>
+            Переходим в файл с <span>next js</span>, заходим в out и копируем 3 файла <span>(_next,
+                icons,images)</span> и вставляем их в корень WP.
+            <br /><img src="/img/02.png" /><br />
+            Теперь необходимо подключить стили и скрипты. Дабы не перетруждать
+            ваши пальцы и не прописывать все вручную, слева есть утилита,
+            которая сделает все за вас. Все что нужно вам будет сделать - это
+            открыть файл с <span>next.js/.next/build-manifest.json</span> => скопировать весь
+            json файла => вставить в <span>textarea</span> утилиты и нажать <span>"Добавить"</span>. Ниже
+            появиться нужный код, который необходимо весь скопировать и вставить
+            в тег <code>&#60;head&#62;</code>, файла <span>header.php</span>.
+          </p>
+          <p>
+            Дальше нужно добавить все страницы которые есть в проекте: Копируем
+            с папки out все <span>html</span> файлы и перебрасываем их в корень темы. Потом,
+            проходимся по каждому <span>html</span> файлу и удаляем все кроме содержимого
+            <code>&#60;body&#62;&#60;/body&#62;</code> и подключаем хедер и футер. И обязательно нужно добавить
+            <span>Template Name</span> и <span>Template Post</span>, дабы чуть позже можно было добавить в
+            админ-панели эти шаблоны страницам. В итоге у вас должно получится,
+            что-то примерно такое:
+            <br /><img src="/img/03.png" /><br />
+            <p>
+                И проделываем также для каждого <span>html</span> файла.<br />
+                Но, файл <span>index.html</span> дополнительно нужно будет переименовать в <span>front.php</span>
+            </p>
+          </p>
+        </div>
+        <div class="step step4">
+            <h2>4. Добавление шаблонов в админ-панели</h2>
+            <p>
+                После, переходим в админ панель => Все страницы и для каждой страницы добавляем нужный шаблон 
+                <br /><img src="/img/04.png" /><br />
+            </p>
+        </div>
+      </section>
+    </div>
+    <script type="text/javascript" src="./scripts.js"></script>
+  </body>
+</html>
